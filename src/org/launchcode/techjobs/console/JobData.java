@@ -50,8 +50,10 @@ public class JobData {
 
         // load data, if not already loaded
         loadData();
+        //Changed this section for Bonus #2, making copy to return instead of allJobs itself
+        ArrayList jobs_copy = new ArrayList(allJobs);
 
-        return allJobs;
+        return jobs_copy;
     }
 
     /**
@@ -71,17 +73,57 @@ public class JobData {
         loadData();
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        String lower_value = value.toLowerCase();
 
         for (HashMap<String, String> row : allJobs) {
 
             String aValue = row.get(column);
+//Add this if clause to make search here case insensitive (todo: make method to call in both methods instead)
+            if (!jobs.contains(row)) {
+                for (String word : aValue.split(" ")) {
+                    if (word.toLowerCase().contains(lower_value)) {
+                        jobs.add(row);
+                        break;
 
-            if (aValue.contains(value)) {
-                jobs.add(row);
-            }
-        }
-
+                    }
+                }}}
         return jobs;
+    }
+
+    /**
+     * In the JobData class, create a new (public static) method that will search for a
+     * String within each of the columns. Name it findByValue.
+     *
+     * @param columns HashMap with each name of column to search
+     * @param value Value of the field to search for
+     * @return List of all jobs matching the criteria
+     */
+   public static ArrayList<HashMap<String, String>> findByValue(HashMap<String, String> columns, String value) {
+       // load data, if not already loaded
+       loadData();
+
+       ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+       String lower_value = value.toLowerCase();
+
+       for (HashMap<String, String> row : allJobs) {
+
+           for (String column : columns.keySet()) {
+               if (column.equals("all")) {
+                   continue;
+               }
+               String aValue = row.get(column);
+
+               if (!jobs.contains(row)) {
+                for (String word : aValue.split(" ")) {
+                    if (word.toLowerCase().contains(lower_value)) {
+                   jobs.add(row);
+                   break;
+           }
+       }
+       }
+           }
+       }
+       return jobs;
     }
 
     /**

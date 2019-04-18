@@ -1,8 +1,6 @@
 package org.launchcode.techjobs.console;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -19,6 +17,7 @@ public class TechJobs {
         columnChoices.put("employer", "Employer");
         columnChoices.put("location", "Location");
         columnChoices.put("position type", "Position Type");
+        columnChoices.put("name", "Position Title");  //added this as extra search query
         columnChoices.put("all", "All");
 
         // Top-level menu options
@@ -46,6 +45,8 @@ public class TechJobs {
                     System.out.println("\n*** All " + columnChoices.get(columnChoice) + " Values ***");
 
                     // Print list of skills, employers, etc
+                    //Added line for sorting results
+                    Collections.sort(results);
                     for (String item : results) {
                         System.out.println(item);
                     }
@@ -61,7 +62,8 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    //Added findByValue method call here
+                    printJobs(JobData.findByValue(columnChoices, searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -110,7 +112,26 @@ public class TechJobs {
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
+/* Example of desired output
+*****
+ position type: Data Scientist / Business Intelligence
+ name: Sr. IT Analyst (Data/BI)
+ employer: Bull Moose Industries
+ location: Saint Louis
+ core competency: Statistical Analysis
+*****
+ */
 
-        System.out.println("printJobs is not implemented yet");
+        if (someJobs.size() == 0) {
+            System.out.println("Search returned no positions");
+        } else {
+            System.out.println("*****");
+            for (HashMap<String, String> job: someJobs) {
+                for (Map.Entry<String, String> job_detail : job.entrySet()) {
+                    System.out.println(job_detail.getKey() + ": " + job_detail.getValue());
+                }
+                System.out.println("*****");
+            }
+        }
     }
 }
